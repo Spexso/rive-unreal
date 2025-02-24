@@ -8,11 +8,12 @@ Currently supported platforms and backends include:
 
 - Metal on Mac
 - Metal on iOS
-- D3D11 & D3D12 on Windows
+- D3D11 on Windows
 - OpenGL on Android
 
 Planned support for:
 
+- D3D12 on Windows
 - Vulkan on Linux, Android, Windows
 
 ### Feature support
@@ -58,7 +59,7 @@ open-source runtime libraries allow them to load their animations into apps, gam
 
 Check out the latest example project from the [releases page](https://github.com/rive-app/rive-unreal/releases) to see a few techniques for adding Rive graphics in an Unreal project, as well as documentation on navigating the samples.
 
-You can find the source for the rive-unreal-demos [here](https://github.com/rive-app/rive-unreal-demos).
+You can find the source for the rive-unreal-examples [here](https://github.com/rive-app/rive-unreal-examples).
 
 You will need to work in the **Unreal 5.3 or 5.4** editor that supports OpenGL or D3D11 for Windows, or a Mac with ARM64 (M1, M2, etc) architecture.
 

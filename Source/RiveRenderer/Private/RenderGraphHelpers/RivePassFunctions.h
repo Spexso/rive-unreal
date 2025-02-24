@@ -39,7 +39,6 @@ FRDGPassRef AddGradientPass(FRDGBuilder& GraphBuilder,
 BEGIN_SHADER_PARAMETER_STRUCT(FRiveTesselationPassParameters, )
 SHADER_PARAMETER_RDG_UNIFORM_BUFFER(FFlushUniforms, FlushUniforms)
 SHADER_PARAMETER_STRUCT_INCLUDE(FRiveRDGTessVertexShader::FParameters, VS)
-SHADER_PARAMETER_STRUCT_INCLUDE(FRiveRDGTessPixelShader::FParameters, PS)
 RENDER_TARGET_BINDING_SLOTS()
 END_SHADER_PARAMETER_STRUCT()
 
@@ -120,8 +119,6 @@ BEGIN_SHADER_PARAMETER_STRUCT(FRiveAtomicResolvePassParameters, )
 SHADER_PARAMETER_RDG_UNIFORM_BUFFER(FFlushUniforms, FlushUniforms)
 SHADER_PARAMETER_STRUCT_INCLUDE(FRiveRDGAtomicResolvePixelShader::FParameters,
                                 PS)
-SHADER_PARAMETER_STRUCT_INCLUDE(FRiveRDGAtomicResolveVertexShader::FParameters,
-                                VS)
 RENDER_TARGET_BINDING_SLOTS()
 
 END_SHADER_PARAMETER_STRUCT()

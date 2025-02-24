@@ -38,7 +38,7 @@ public:
 
     virtual void CacheTextureTarget_RenderThread(
         FRHICommandListImmediate& RHICmdList,
-        const FTextureRHIRef& InRHIResource) override;
+        const FTexture2DRHIRef& InRHIResource) override;
 
 #if WITH_RIVE
 

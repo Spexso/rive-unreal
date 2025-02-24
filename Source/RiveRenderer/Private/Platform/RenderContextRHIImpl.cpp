@@ -6,11 +6,7 @@
 #include "IImageWrapper.h"
 #include "PixelShaderUtils.h"
 #include "RenderGraphBuilder.h"
-
-#if UE_VERSION_OLDER_THAN(5, 5, 0)
-#include "RHIResourceUpdates.h"
-#endif
-
+#include "RHIResourceReplace.h"
 #include "RenderGraphUtils.h"
 #include "Logs/RiveRendererLog.h"
 
@@ -26,12 +22,63 @@
 #include "rive/decoders/bitmap_decoder.hpp"
 #include "Misc/EngineVersionComparison.h"
 
-#include "RiveShaderTypes.h"
-
 THIRD_PARTY_INCLUDES_START
 #include "rive/renderer/rive_render_image.hpp"
 #include "rive/generated/shaders/constants.glsl.hpp"
 THIRD_PARTY_INCLUDES_END
+
+#if UE_VERSION_OLDER_THAN(5, 4, 0)
+#define CREATE_TEXTURE_ASYNC(RHICmdList, Desc) RHICreateTexture(Desc)
+#define CREATE_TEXTURE(RHICmdList, Desc) RHICreateTexture(Desc)
+#define RASTER_STATE(FillMode, CullMode, DepthClip)                            \
+    TStaticRasterizerState<FillMode, CullMode, false, false, DepthClip>::      \
+        GetRHI()
+#else // UE_VERSION_NEWER_OR_EQUAL_TO (5, 4,0)
+#define CREATE_TEXTURE_ASYNC(RHICmdList, Desc) RHICmdList->CreateTexture(Desc)
+#define CREATE_TEXTURE(RHICmdList, Desc) RHICmdList.CreateTexture(Desc)
+#define RASTER_STATE(FillMode, CullMode, DepthClip)                            \
+    TStaticRasterizerState<FillMode, CullMode, DepthClip, false>::GetRHI()
+#endif
+
+class FRHIAsyncCommandList
+{
+public:
+    FRHIAsyncCommandList(FRHIGPUMask InGPUMask = FRHIGPUMask::All())
+        : RHICmdListStack(InGPUMask)
+    {
+    }
+
+    FRHICommandList& GetCommandList()
+    {
+        return RHICmdListStack;
+    }
+
+    FRHICommandList& operator*()
+    {
+        return RHICmdListStack;
+    }
+
+    FRHICommandList* operator->()
+    {
+        return &RHICmdListStack;
+    }
+
+    ~FRHIAsyncCommandList()
+    {
+        RHICmdListStack.FinishRecording();
+        if (RHICmdListStack.HasCommands())
+        {
+            ENQUEUE_RENDER_COMMAND(AsyncCommandListScope)(
+                [RHICmdList = new FRHICommandList(MoveTemp(RHICmdListStack))](FRHICommandListImmediate& RHICmdListImmediate)
+                {
+                    RHICmdListImmediate.QueueAsyncCommandListSubmit(RHICmdList);
+                });
+        }
+    }
+
+private:
+    FRHICommandList RHICmdListStack;
+};
 
 template <typename DataType, size_t size>
 struct TStaticResourceData : public FResourceArrayInterface
@@ -56,7 +103,7 @@ public:
     };
 
     /** Do nothing on discard because this is static const CPU data */
-    virtual void Discard() override{};
+    virtual void Discard() override {};
 
     virtual bool IsStatic() const override { return true; }
 
@@ -94,7 +141,7 @@ public:
     };
 
     /** Do nothing on discard because this is static const CPU data */
-    virtual void Discard() override{};
+    virtual void Discard() override {};
 
     virtual bool IsStatic() const override { return true; }
 
@@ -262,14 +309,8 @@ RHICapabilities::RHICapabilities()
                                            EPixelFormatCapabilities::UAV));
     check(UE::PixelFormat::HasCapabilities(PF_B8G8R8A8,
                                            EPixelFormatCapabilities::UAV));
-#if UE_VERSION_OLDER_THAN(5, 4, 0)
-    // for now just force metal as the only raster order support until there is
-    // a better version in 5.3
-    bSupportsRasterOrderViews =
-        GDynamicRHI->GetInterfaceType() == ERHIInterfaceType::Metal;
-#else
+
     bSupportsRasterOrderViews = GRHISupportsRasterOrderViews;
-#endif
     // it seems vulkan requires typed uav support.
     bSupportsTypedUAVLoads =
         RHISupports4ComponentUAVReadWrite(GMaxRHIShaderPlatform) ||
@@ -382,7 +423,6 @@ void* RenderBufferRHIImpl::onMap()
 
 void RenderBufferRHIImpl::onUnmap() { m_buffer.unmapAndSubmitBuffer(); }
 
-#if UE_VERSION_OLDER_THAN(5, 5, 0)
 class TextureRHIImpl : public Texture
 {
 public:
@@ -450,79 +490,6 @@ public:
 private:
     FTextureRHIRef m_texture;
 };
-#else // UE VERSION > 5_5:
-// FRHIAsyncCommandList was removed in 5.5 we should probably defer load these
-// instead but this works for now
-class TextureRHIImpl : public Texture
-{
-public:
-    TextureRHIImpl(uint32_t width,
-                   uint32_t height,
-                   uint32_t mipLevelCount,
-                   const uint8_t* imageData,
-                   EPixelFormat PixelFormat = PF_B8G8R8A8) :
-        Texture(width, height)
-    {
-        FRHICommandList& commandList =
-            GRHICommandList.GetImmediateCommandList();
-        FRHICommandListScopedPipelineGuard Guard(commandList);
-
-        auto Desc =
-            FRHITextureCreateDesc::Create2D(TEXT("rive.PLSTextureRHIImpl_"),
-                                            m_width,
-                                            m_height,
-                                            PixelFormat);
-        Desc.SetNumMips(mipLevelCount);
-        m_texture = CREATE_TEXTURE_ASYNC(commandList, Desc);
-        commandList.UpdateTexture2D(
-            m_texture,
-            0,
-            FUpdateTextureRegion2D(0, 0, 0, 0, m_width, m_height),
-            m_width * 4,
-            imageData);
-    }
-
-    TextureRHIImpl(uint32_t width,
-                   uint32_t height,
-                   uint32_t mipLevelCount,
-                   const TArray<uint8>& imageData,
-                   EPixelFormat PixelFormat = PF_B8G8R8A8) :
-        Texture(width, height)
-    {
-        FRHICommandList& commandList =
-            GRHICommandList.GetImmediateCommandList();
-        FRHICommandListScopedPipelineGuard Guard(commandList);
-        // TODO: Move to Staging Buffer
-        auto Desc =
-            FRHITextureCreateDesc::Create2D(TEXT("rive.PLSTextureRHIImpl_"),
-                                            m_width,
-                                            m_height,
-                                            PixelFormat);
-        Desc.SetNumMips(mipLevelCount);
-        m_texture = CREATE_TEXTURE_ASYNC(commandList, Desc);
-        commandList.UpdateTexture2D(
-            m_texture,
-            0,
-            FUpdateTextureRegion2D(0, 0, 0, 0, m_width, m_height),
-            m_width * 4,
-            imageData.GetData());
-    }
-
-    FRDGTextureRef asRDGTexture(FRDGBuilder& Builder) const
-    {
-        check(m_texture);
-        return Builder.RegisterExternalTexture(
-            CreateRenderTarget(m_texture, TEXT("rive.PLSTextureRHIImpl_")));
-    }
-
-    virtual ~TextureRHIImpl() override {}
-
-    FTextureRHIRef contents() const { return m_texture; }
-
-private:
-    FTextureRHIRef m_texture;
-};
-#endif
 
 FString RHICapabilities::AsString() const
 {
@@ -770,8 +737,7 @@ RenderContextRHIImpl::RenderContextRHIImpl(
                                         FIntPoint(1, 1),
                                         PF_R32_UINT);
     PlaceholderDesc.AddFlags(ETextureCreateFlags::ShaderResource);
-    m_placeholderTexture =
-        CREATE_TEXTURE(CommandListImmediate, PlaceholderDesc);
+    m_placeholderTexture = CommandListImmediate.CreateTexture(PlaceholderDesc);
 }
 
 rcp<RenderTargetRHI> RenderContextRHIImpl::makeRenderTarget(
@@ -1283,6 +1249,9 @@ void RenderContextRHIImpl::flush(const FlushDescriptor& desc)
         {
             if (renderDirectToRasterPipeline)
             {
+                // this will all be moved out and used everywhere once RDG is
+                // setup correctly this has to be done because we have no way to
+                // update the bound clear color without creating a new texture
                 float clearColor4f[4];
                 UnpackColorToRGBA32FPremul(desc.clearColor, clearColor4f);
                 AddClearRenderTargetPass(GraphBuilder,

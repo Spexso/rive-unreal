@@ -106,7 +106,7 @@ void FRiveRendererD3D11::CreateRenderContext_RenderThread(
 
 void FRiveRendererD3D11::ResetDXState() const
 {
-    check(IsInRenderingThread());
+    check(IsInRHIThread());
     check(D3D11GPUAdapter.IsValid());
 
     FScopeLock Lock(&ThreadDataCS);

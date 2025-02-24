@@ -38,17 +38,14 @@ public class RiveEditor : ModuleRules
                 "EditorStyle",
                 "UnrealEd",
                 "DeveloperSettings",
-                "RiveRenderer"
+                "RiveRenderer",
+                "WindowsTargetPlatformSettings"
             }
         );
 
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {
-#if UE_5_5_OR_LATER
-            PrivateDependencyModuleNames.Add("WindowsTargetPlatformSettings");
-#else
             PrivateDependencyModuleNames.Add("WindowsTargetPlatform");
-#endif
         }
     }
 }

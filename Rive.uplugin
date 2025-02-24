@@ -1,49 +1,75 @@
 {
-	"FileVersion": 3,
-	"Version": 1,
-	"VersionName": "1.0",
-	"FriendlyName": "Rive",
-	"Description": "A Unreal Engine runtime library for Rive.",
-	"Category": "Rive",
-	"CreatedBy": "Rive, Inc.",
-	"CreatedByURL": "https://rive.app/",
-	"DocsURL": "",
-	"MarketplaceURL": "",
-	"SupportURL": "https://rive.atlassian.net/servicedesk/customer/portals",
-	"CanContainContent": true,
-	"IsBetaVersion": false,
-	"IsExperimentalVersion": false,
-	"Installed": false,
-	"Modules": [
-		{
-			"Name": "Rive",
-			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"WhitelistPlatforms": ["Win64", "Mac", "IOS", "Android"]
-		},
-		{
-			"Name": "RiveShaders",
-			"Type": "Runtime",
-			"LoadingPhase": "PostConfigInit",
-			"WhitelistPlatforms": ["Win64", "Mac", "IOS", "Android"]
-		},
-		{
-			"Name": "RiveStats",
-			"Type": "Runtime",
-			"LoadingPhase": "PostConfigInit",
-			"WhitelistPlatforms": ["Win64", "Mac", "IOS", "Android"]
-		},
-		{
-			"Name": "RiveRenderer",
-			"Type": "RuntimeNoCommandlet",
-			"LoadingPhase": "PreDefault",
-			"WhitelistPlatforms": ["Win64", "Mac", "IOS", "Android"]
-		},
-		{
-			"Name": "RiveEditor",
-			"Type": "Editor",
-			"LoadingPhase": "Default",
-			"WhitelistPlatforms": ["Win64", "Mac", "IOS", "Android"]
-		}
-	]
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0",
+  "FriendlyName": "Rive",
+  "Description": "A Unreal Engine runtime library for Rive.",
+  "Category": "Rive",
+  "CreatedBy": "Rive, Inc.",
+  "CreatedByURL": "https://rive.app/",
+  "DocsURL": "",
+  "MarketplaceURL": "",
+  "SupportURL": "https://rive.atlassian.net/servicedesk/customer/portals",
+  "CanContainContent": true,
+  "IsBetaVersion": false,
+  "IsExperimentalVersion": false,
+  "Installed": false,
+  "Modules": [
+    {
+      "Name": "Rive",
+      "Type": "Runtime",
+      "LoadingPhase": "Default",
+      "WhitelistPlatforms": [ "Win64", "Mac", "IOS", "Android" ],
+      "BlacklistPlatforms": [ "Linux" ],
+      "TargetDenyList": [
+        "Server"
+      ]
+    },
+    {
+      "Name": "RiveShaders",
+      "Type": "Runtime",
+      "LoadingPhase": "PostConfigInit",
+      "WhitelistPlatforms": [ "Win64", "Mac", "IOS", "Android" ],
+      "BlacklistPlatforms": [ "Linux" ],
+      "TargetDenyList": [
+        "Server"
+      ]
+    },
+    {
+      "Name": "RiveStats",
+      "Type": "Runtime",
+      "LoadingPhase": "PostConfigInit",
+      "WhitelistPlatforms": [ "Win64", "Mac", "IOS", "Android" ],
+      "BlacklistPlatforms": [ "Linux" ],
+      "TargetDenyList": [
+        "Server"
+      ]
+    },
+    {
+      "Name": "RiveRenderer",
+      "Type": "RuntimeNoCommandlet",
+      "LoadingPhase": "PreDefault",
+      "WhitelistPlatforms": [ "Win64", "Mac", "IOS", "Android" ],
+      "BlacklistPlatforms": [ "Linux" ],
+      "TargetDenyList": [
+        "Server"
+      ]
+    },
+    {
+      "Name": "RiveEditor",
+      "Type": "Editor",
+      "LoadingPhase": "Default",
+      "WhitelistPlatforms": [ "Win64", "Mac", "IOS", "Android" ],
+      "BlacklistPlatforms": [ "Linux" ],
+      "TargetDenyList": [
+        "Server"
+      ]
+    }
+  ],
+  "SupportedTargetPlatforms": [
+    "Win64",
+    "Mac",
+    "IOS",
+    "Android"
+  ]
 }

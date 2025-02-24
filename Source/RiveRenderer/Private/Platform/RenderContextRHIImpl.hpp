@@ -65,9 +65,8 @@ public:
                       size_t InSizeInBytes,
                       size_t stride);
 
-    FBufferRHIRef Sync(FRHICommandList& commandList,
-                       size_t offsetInBytes = 0) const;
-    FRDGBufferRef Sync(FRDGBuilder& RDGBuilder, size_t offsetInBytes = 0) const;
+    FBufferRHIRef Sync(FRHICommandList&, size_t offsetInBytes = 0) const;
+    FRDGBufferRef Sync(FRDGBuilder&, size_t offsetInBytes = 0) const;
 
 protected:
     virtual void* onMapBuffer(int bufferIdx, size_t mapSizeInBytes) override;
