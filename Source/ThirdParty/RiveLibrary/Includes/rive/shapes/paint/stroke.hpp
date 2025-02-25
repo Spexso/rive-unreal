@@ -13,25 +13,16 @@ private:
 public:
     RenderPaint* initRenderPaint(ShapePaintMutator* mutator) override;
     PathFlags pathFlags() const override;
+    void draw(Renderer* renderer,
+              CommandPath* path,
+              const RawPath* rawPath,
+              RenderPaint* paint) override;
     void addStrokeEffect(StrokeEffect* effect);
     bool hasStrokeEffect() { return m_Effect != nullptr; }
     void invalidateEffects();
     bool isVisible() const override;
     void invalidateRendering();
-    void applyTo(RenderPaint* renderPaint,
-                 float opacityModifier) const override;
-    ShapePaintPath* pickPath(ShapePaintContainer* shape) const override;
-
-    void draw(Renderer* renderer,
-              ShapePaintPath* shapePaintPath,
-              const Mat2D& transform,
-              bool usePathFillRule,
-              RenderPaint* overridePaint) override;
-    void buildDependencies() override;
-    void update(ComponentDirt value) override;
-#ifdef TESTING
-    StrokeEffect* effect() { return m_Effect; }
-#endif
+    void applyTo(RenderPaint* renderPaint, float opacityModifier) const override;
 
 protected:
     void thicknessChanged() override;

@@ -6,9 +6,6 @@ namespace rive
 {
 class TranslationConstraint : public TranslationConstraintBase
 {
-protected:
-    bool requiresTarget() override { return false; }
-
 public:
     void constrain(TransformComponent* component) override;
 };

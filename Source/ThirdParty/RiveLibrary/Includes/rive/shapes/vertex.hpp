@@ -15,8 +15,7 @@ private:
 
 public:
     template <typename T> T* weight() { return m_Weight->as<T>(); }
-    virtual void deform(const Mat2D& worldTransform,
-                        const float* boneTransforms);
+    virtual void deform(const Mat2D& worldTransform, const float* boneTransforms);
     bool hasWeight() { return m_Weight != nullptr; }
     Vec2D renderTranslation();
 

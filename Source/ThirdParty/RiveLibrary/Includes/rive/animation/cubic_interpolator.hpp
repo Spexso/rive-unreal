@@ -9,7 +9,6 @@ class CubicInterpolator : public CubicInterpolatorBase
 {
 public:
     StatusCode onAddedDirty(CoreContext* context) override;
-    void initialize() override;
 
 protected:
     CubicInterpolatorSolver m_solver;

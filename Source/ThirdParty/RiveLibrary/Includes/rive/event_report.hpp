@@ -8,9 +8,7 @@ class Event;
 class EventReport
 {
 public:
-    EventReport(Event* event, float secondsDelay) :
-        m_event(event), m_secondsDelay(secondsDelay)
-    {}
+    EventReport(Event* event, float secondsDelay) : m_event(event), m_secondsDelay(secondsDelay) {}
     Event* event() const { return m_event; }
     float secondsDelay() const { return m_secondsDelay; }
 

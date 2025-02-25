@@ -4,11 +4,6 @@
 #include <stdio.h>
 namespace rive
 {
-#ifdef WITH_RIVE_TOOLS
-class ViewModelInstanceEnum;
-typedef void (*ViewModelEnumChanged)(ViewModelInstanceEnum* vmi,
-                                     uint32_t value);
-#endif
 class ViewModelInstanceEnum : public ViewModelInstanceEnumBase
 {
 public:
@@ -17,14 +12,6 @@ public:
 
 protected:
     void propertyValueChanged() override;
-#ifdef WITH_RIVE_TOOLS
-public:
-    void onChanged(ViewModelEnumChanged callback)
-    {
-        m_changedCallback = callback;
-    }
-    ViewModelEnumChanged m_changedCallback = nullptr;
-#endif
 };
 } // namespace rive
 

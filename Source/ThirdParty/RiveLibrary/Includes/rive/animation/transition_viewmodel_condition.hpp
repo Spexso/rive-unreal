@@ -14,10 +14,7 @@ protected:
     TransitionComparator* m_rightComparator;
 
 public:
-    bool evaluate(const StateMachineInstance* stateMachineInstance,
-                  StateMachineLayerInstance* layerInstance) const override;
-    void useInLayer(const StateMachineInstance* stateMachineInstance,
-                    StateMachineLayerInstance* layerInstance) const override;
+    bool evaluate(const StateMachineInstance* stateMachineInstance) const override;
     TransitionComparator* leftComparator() const { return m_leftComparator; };
     TransitionComparator* rightComparator() const { return m_rightComparator; };
     void comparator(TransitionComparator* value)
@@ -31,10 +28,7 @@ public:
             m_rightComparator = value;
         }
     };
-    TransitionConditionOp op() const
-    {
-        return (TransitionConditionOp)opValue();
-    }
+    TransitionConditionOp op() const { return (TransitionConditionOp)opValue(); }
 };
 } // namespace rive
 

@@ -14,9 +14,7 @@ static bool is_big_endian(void)
 
 /* Decode an unsigned int LEB128 at buf into r, returning the nr of bytes read.
  */
-inline size_t decode_uint_leb(const uint8_t* buf,
-                              const uint8_t* buf_end,
-                              uint64_t* r)
+inline size_t decode_uint_leb(const uint8_t* buf, const uint8_t* buf_end, uint64_t* r)
 {
     const uint8_t* p = buf;
     uint8_t shift = 0;
@@ -39,9 +37,7 @@ inline size_t decode_uint_leb(const uint8_t* buf,
 
 /* Decode an unsigned int LEB128 at buf into r, returning the nr of bytes read.
  */
-inline size_t decode_uint_leb32(const uint8_t* buf,
-                                const uint8_t* buf_end,
-                                uint32_t* r)
+inline size_t decode_uint_leb32(const uint8_t* buf, const uint8_t* buf_end, uint32_t* r)
 {
     const uint8_t* p = buf;
     uint8_t shift = 0;
@@ -86,9 +82,7 @@ inline uint64_t decode_string(uint64_t str_len,
 
 /* Decodes a double (8 bytes)
  */
-inline size_t decode_double(const uint8_t* buf,
-                            const uint8_t* buf_end,
-                            double* r)
+inline size_t decode_double(const uint8_t* buf, const uint8_t* buf_end, double* r)
 {
     // Return zero bytes read on buffer overflow
     if (buf_end - buf < sizeof(double))
@@ -97,8 +91,7 @@ inline size_t decode_double(const uint8_t* buf,
     }
     if (is_big_endian())
     {
-        uint8_t inverted[8] =
-            {buf[7], buf[6], buf[5], buf[4], buf[3], buf[2], buf[1], buf[0]};
+        uint8_t inverted[8] = {buf[7], buf[6], buf[5], buf[4], buf[3], buf[2], buf[1], buf[0]};
         memcpy(r, inverted, sizeof(double));
     }
     else
@@ -131,9 +124,7 @@ inline size_t decode_float(const uint8_t* buf, const uint8_t* buf_end, float* r)
 
 /* Decodes a single byte
  */
-inline size_t decode_uint_8(const uint8_t* buf,
-                            const uint8_t* buf_end,
-                            uint8_t* r)
+inline size_t decode_uint_8(const uint8_t* buf, const uint8_t* buf_end, uint8_t* r)
 {
     // Return zero bytes read on buffer overflow
     if (buf_end - buf < (unsigned)sizeof(uint8_t))
@@ -146,9 +137,7 @@ inline size_t decode_uint_8(const uint8_t* buf,
 
 /* Decodes a 32 bit unsigned integer.
  */
-inline size_t decode_uint_32(const uint8_t* buf,
-                             const uint8_t* buf_end,
-                             uint32_t* r)
+inline size_t decode_uint_32(const uint8_t* buf, const uint8_t* buf_end, uint32_t* r)
 {
     // Return zero bytes read on buffer overflow
     if (buf_end - buf < (unsigned)sizeof(uint32_t))

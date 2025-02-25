@@ -1,6 +1,5 @@
 #ifndef _RIVE_TEXT_BASE_HPP_
 #define _RIVE_TEXT_BASE_HPP_
-#include "rive/core/field_types/core_bool_type.hpp"
 #include "rive/core/field_types/core_double_type.hpp"
 #include "rive/core/field_types/core_uint_type.hpp"
 #include "rive/drawable.hpp"
@@ -14,8 +13,8 @@ protected:
 public:
     static const uint16_t typeKey = 134;
 
-    /// Helper to quickly determine if a core object extends another without
-    /// RTTI at runtime.
+    /// Helper to quickly determine if a core object extends another without RTTI
+    /// at runtime.
     bool isTypeOf(uint16_t typeKey) const override
     {
         switch (typeKey)
@@ -46,9 +45,8 @@ public:
     static const uint16_t originValuePropertyKey = 377;
     static const uint16_t wrapValuePropertyKey = 683;
     static const uint16_t verticalAlignValuePropertyKey = 685;
-    static const uint16_t fitFromBaselinePropertyKey = 703;
 
-protected:
+private:
     uint32_t m_AlignValue = 0;
     uint32_t m_SizingValue = 0;
     uint32_t m_OverflowValue = 0;
@@ -60,7 +58,6 @@ protected:
     uint32_t m_OriginValue = 0;
     uint32_t m_WrapValue = 0;
     uint32_t m_VerticalAlignValue = 0;
-    bool m_FitFromBaseline = true;
 
 public:
     inline uint32_t alignValue() const { return m_AlignValue; }
@@ -184,17 +181,6 @@ public:
         verticalAlignValueChanged();
     }
 
-    inline bool fitFromBaseline() const { return m_FitFromBaseline; }
-    void fitFromBaseline(bool value)
-    {
-        if (m_FitFromBaseline == value)
-        {
-            return;
-        }
-        m_FitFromBaseline = value;
-        fitFromBaselineChanged();
-    }
-
     Core* clone() const override;
     void copy(const TextBase& object)
     {
@@ -209,7 +195,6 @@ public:
         m_OriginValue = object.m_OriginValue;
         m_WrapValue = object.m_WrapValue;
         m_VerticalAlignValue = object.m_VerticalAlignValue;
-        m_FitFromBaseline = object.m_FitFromBaseline;
         Drawable::copy(object);
     }
 
@@ -250,9 +235,6 @@ public:
             case verticalAlignValuePropertyKey:
                 m_VerticalAlignValue = CoreUintType::deserialize(reader);
                 return true;
-            case fitFromBaselinePropertyKey:
-                m_FitFromBaseline = CoreBoolType::deserialize(reader);
-                return true;
         }
         return Drawable::deserialize(propertyKey, reader);
     }
@@ -269,7 +251,6 @@ protected:
     virtual void originValueChanged() {}
     virtual void wrapValueChanged() {}
     virtual void verticalAlignValueChanged() {}
-    virtual void fitFromBaselineChanged() {}
 };
 } // namespace rive
 

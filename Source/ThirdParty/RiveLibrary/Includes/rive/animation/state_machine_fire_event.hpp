@@ -15,10 +15,7 @@ class StateMachineFireEvent : public StateMachineFireEventBase
 {
 public:
     StatusCode import(ImportStack& importStack) override;
-    StateMachineFireOccurance occurs() const
-    {
-        return (StateMachineFireOccurance)occursValue();
-    }
+    StateMachineFireOccurance occurs() const { return (StateMachineFireOccurance)occursValue(); }
     void perform(StateMachineInstance* stateMachineInstance) const;
 };
 

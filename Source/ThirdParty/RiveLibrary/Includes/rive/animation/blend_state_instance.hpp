@@ -27,15 +27,10 @@ private:
 
 public:
     const T* blendAnimation() const { return m_BlendAnimation; }
-    const LinearAnimationInstance* animationInstance() const
-    {
-        return &m_AnimationInstance;
-    }
+    const LinearAnimationInstance* animationInstance() const { return &m_AnimationInstance; }
 
-    BlendStateAnimationInstance(const T* blendAnimation,
-                                ArtboardInstance* instance) :
-        m_BlendAnimation(blendAnimation),
-        m_AnimationInstance(blendAnimation->animation(), instance)
+    BlendStateAnimationInstance(const T* blendAnimation, ArtboardInstance* instance) :
+        m_BlendAnimation(blendAnimation), m_AnimationInstance(blendAnimation->animation(), instance)
     {}
 
     void mix(float value) { m_Mix = value; }
@@ -48,19 +43,17 @@ protected:
     bool m_KeepGoing = true;
 
 public:
-    BlendStateInstance(const K* blendState, ArtboardInstance* instance) :
-        StateInstance(blendState)
+    BlendStateInstance(const K* blendState, ArtboardInstance* instance) : StateInstance(blendState)
     {
         m_AnimationInstances.reserve(blendState->animations().size());
 
         for (auto blendAnimation : blendState->animations())
         {
             m_AnimationInstances.emplace_back(
-                BlendStateAnimationInstance<T>(static_cast<T*>(blendAnimation),
-                                               instance));
+                BlendStateAnimationInstance<T>(static_cast<T*>(blendAnimation), instance));
         }
-        if ((static_cast<LayerStateFlags>(blendState->flags()) &
-             LayerStateFlags::Reset) == LayerStateFlags::Reset)
+        if ((static_cast<LayerStateFlags>(blendState->flags()) & LayerStateFlags::Reset) ==
+            LayerStateFlags::Reset)
         {
             auto animations = std::vector<const LinearAnimation*>();
             for (auto blendAnimation : blendState->animations())
@@ -72,8 +65,7 @@ public:
 
     bool keepGoing() const override { return m_KeepGoing; }
 
-    void advance(float seconds,
-                 StateMachineInstance* stateMachineInstance) override
+    void advance(float seconds, StateMachineInstance* stateMachineInstance) override
     {
         // NOTE: we are intentionally ignoring the animationInstances' keepGoing
         // return value.
@@ -86,8 +78,7 @@ public:
                 // Should animations with m_Mix == 0.0 advance? They will
                 // trigger events and the event properties (if any) will not be
                 // updated by animationInstance.apply
-                animation.m_AnimationInstance.advance(seconds,
-                                                      stateMachineInstance);
+                animation.m_AnimationInstance.advance(seconds, stateMachineInstance);
             }
         }
     }
@@ -106,8 +97,7 @@ public:
     }
 
     // Find the animationInstance that corresponds to the blendAnimation.
-    const LinearAnimationInstance* animationInstance(
-        const BlendAnimation* blendAnimation) const
+    const LinearAnimationInstance* animationInstance(const BlendAnimation* blendAnimation) const
     {
         for (auto& animation : m_AnimationInstances)
         {

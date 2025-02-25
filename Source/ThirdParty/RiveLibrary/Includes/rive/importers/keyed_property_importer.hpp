@@ -16,8 +16,7 @@ private:
     KeyedProperty* m_KeyedProperty;
 
 public:
-    KeyedPropertyImporter(LinearAnimation* animation,
-                          KeyedProperty* keyedProperty);
+    KeyedPropertyImporter(LinearAnimation* animation, KeyedProperty* keyedProperty);
     void addKeyFrame(std::unique_ptr<KeyFrame>);
     bool readNullObject() override;
 };

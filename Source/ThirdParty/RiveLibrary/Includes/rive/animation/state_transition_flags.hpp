@@ -30,24 +30,21 @@ enum class StateTransitionFlags : unsigned char
 
 };
 
-inline constexpr StateTransitionFlags operator&(StateTransitionFlags lhs,
-                                                StateTransitionFlags rhs)
+inline constexpr StateTransitionFlags operator&(StateTransitionFlags lhs, StateTransitionFlags rhs)
 {
     return static_cast<StateTransitionFlags>(
         static_cast<std::underlying_type<StateTransitionFlags>::type>(lhs) &
         static_cast<std::underlying_type<StateTransitionFlags>::type>(rhs));
 }
 
-inline constexpr StateTransitionFlags operator^(StateTransitionFlags lhs,
-                                                StateTransitionFlags rhs)
+inline constexpr StateTransitionFlags operator^(StateTransitionFlags lhs, StateTransitionFlags rhs)
 {
     return static_cast<StateTransitionFlags>(
         static_cast<std::underlying_type<StateTransitionFlags>::type>(lhs) ^
         static_cast<std::underlying_type<StateTransitionFlags>::type>(rhs));
 }
 
-inline constexpr StateTransitionFlags operator|(StateTransitionFlags lhs,
-                                                StateTransitionFlags rhs)
+inline constexpr StateTransitionFlags operator|(StateTransitionFlags lhs, StateTransitionFlags rhs)
 {
     return static_cast<StateTransitionFlags>(
         static_cast<std::underlying_type<StateTransitionFlags>::type>(lhs) |
@@ -60,8 +57,7 @@ inline constexpr StateTransitionFlags operator~(StateTransitionFlags rhs)
         ~static_cast<std::underlying_type<StateTransitionFlags>::type>(rhs));
 }
 
-inline StateTransitionFlags& operator|=(StateTransitionFlags& lhs,
-                                        StateTransitionFlags rhs)
+inline StateTransitionFlags& operator|=(StateTransitionFlags& lhs, StateTransitionFlags rhs)
 {
     lhs = static_cast<StateTransitionFlags>(
         static_cast<std::underlying_type<StateTransitionFlags>::type>(lhs) |
@@ -70,8 +66,7 @@ inline StateTransitionFlags& operator|=(StateTransitionFlags& lhs,
     return lhs;
 }
 
-inline StateTransitionFlags& operator&=(StateTransitionFlags& lhs,
-                                        StateTransitionFlags rhs)
+inline StateTransitionFlags& operator&=(StateTransitionFlags& lhs, StateTransitionFlags rhs)
 {
     lhs = static_cast<StateTransitionFlags>(
         static_cast<std::underlying_type<StateTransitionFlags>::type>(lhs) &
@@ -80,8 +75,7 @@ inline StateTransitionFlags& operator&=(StateTransitionFlags& lhs,
     return lhs;
 }
 
-inline StateTransitionFlags& operator^=(StateTransitionFlags& lhs,
-                                        StateTransitionFlags rhs)
+inline StateTransitionFlags& operator^=(StateTransitionFlags& lhs, StateTransitionFlags rhs)
 {
     lhs = static_cast<StateTransitionFlags>(
         static_cast<std::underlying_type<StateTransitionFlags>::type>(lhs) ^

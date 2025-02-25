@@ -15,7 +15,6 @@ public:
     float transform(float factor) const override;
 
     Easing easing() const { return (Easing)easingValue(); }
-    void initialize() override;
 
 private:
     ElasticEase m_elastic;

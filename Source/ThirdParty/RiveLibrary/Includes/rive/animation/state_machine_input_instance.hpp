@@ -3,8 +3,6 @@
 
 #include <string>
 #include <stdint.h>
-#include <vector>
-#include <algorithm>
 
 namespace rive
 {
@@ -27,8 +25,7 @@ private:
 protected:
     void valueChanged();
 
-    SMIInput(const StateMachineInput* input,
-             StateMachineInstance* machineInstance);
+    SMIInput(const StateMachineInput* input, StateMachineInstance* machineInstance);
 
 public:
     virtual ~SMIInput() {}
@@ -52,8 +49,7 @@ class SMIBool : public SMIInput
 private:
     bool m_Value;
 
-    SMIBool(const StateMachineBool* input,
-            StateMachineInstance* machineInstance);
+    SMIBool(const StateMachineBool* input, StateMachineInstance* machineInstance);
 
 public:
     bool value() const { return m_Value; }
@@ -67,53 +63,23 @@ class SMINumber : public SMIInput
 private:
     float m_Value;
 
-    SMINumber(const StateMachineNumber* input,
-              StateMachineInstance* machineInstance);
+    SMINumber(const StateMachineNumber* input, StateMachineInstance* machineInstance);
 
 public:
     float value() const { return m_Value; }
     void value(float newValue);
 };
 
-class Triggerable
-{
-
-public:
-    bool isUsedInLayer(StateMachineLayerInstance* layer) const
-    {
-        auto it = std::find(m_usedLayers.begin(), m_usedLayers.end(), layer);
-        if (it == m_usedLayers.end())
-        {
-            return false;
-        }
-        return true;
-    }
-    void useInLayer(StateMachineLayerInstance* layer) const
-    {
-        auto it = std::find(m_usedLayers.begin(), m_usedLayers.end(), layer);
-        if (it == m_usedLayers.end())
-        {
-            m_usedLayers.push_back(layer);
-        }
-    }
-
-protected:
-    mutable std::vector<StateMachineLayerInstance*> m_usedLayers;
-};
-
-class SMITrigger : public SMIInput, public Triggerable
+class SMITrigger : public SMIInput
 {
     friend class StateMachineInstance;
     friend class TransitionTriggerCondition;
+
+private:
     bool m_fired = false;
 
-    SMITrigger(const StateMachineTrigger* input,
-               StateMachineInstance* machineInstance);
-    void advanced() override
-    {
-        m_fired = false;
-        m_usedLayers.clear();
-    }
+    SMITrigger(const StateMachineTrigger* input, StateMachineInstance* machineInstance);
+    void advanced() override { m_fired = false; }
 
 public:
     void fire();

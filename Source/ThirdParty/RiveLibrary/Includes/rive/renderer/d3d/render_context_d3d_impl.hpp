@@ -29,9 +29,8 @@ public:
     // Alternate rendering target when targetTextureSupportsUAV() is false.
     ID3D11Texture2D* offscreenTexture();
 
-    // Returns an unordered access view of targetTexture(), if
-    // targetTextureSupportsUAV() is true, otherwise returns a UAV of
-    // offscreenTexture().
+    // Returns an unordered access view of targetTexture(), if targetTextureSupportsUAV() is true,
+    // otherwise returns a UAV of offscreenTexture().
     ID3D11UnorderedAccessView* targetUAV();
 
     ID3D11UnorderedAccessView* clipUAV();
@@ -69,10 +68,9 @@ public:
         bool isIntel = false;
     };
 
-    static std::unique_ptr<RenderContext> MakeContext(
-        ComPtr<ID3D11Device>,
-        ComPtr<ID3D11DeviceContext>,
-        const ContextOptions&);
+    static std::unique_ptr<RenderContext> MakeContext(ComPtr<ID3D11Device>,
+                                                      ComPtr<ID3D11DeviceContext>,
+                                                      const ContextOptions&);
 
     rcp<RenderTargetD3D> makeRenderTarget(uint32_t width, uint32_t height)
     {
@@ -82,10 +80,8 @@ public:
     struct D3DCapabilities
     {
         bool supportsRasterizerOrderedViews = false;
-        bool supportsTypedUAVLoadStore =
-            false; // Can we load/store all UAV formats used by Rive?
-        bool supportsMin16Precision =
-            false; // Can we use minimum 16-bit types (e.g. min16int)?
+        bool supportsTypedUAVLoadStore = false; // Can we load/store all UAV formats used by Rive?
+        bool supportsMin16Precision = false;    // Can we use minimum 16-bit types (e.g. min16int)?
         bool isIntel = false;
     };
 
@@ -100,8 +96,7 @@ public:
                                                 UINT mipLevelCount,
                                                 UINT bindFlags,
                                                 UINT miscFlags = 0);
-    ComPtr<ID3D11UnorderedAccessView> makeSimple2DUAV(ID3D11Texture2D* tex,
-                                                      DXGI_FORMAT format);
+    ComPtr<ID3D11UnorderedAccessView> makeSimple2DUAV(ID3D11Texture2D* tex, DXGI_FORMAT format);
     ComPtr<ID3D11Buffer> makeSimpleImmutableBuffer(size_t sizeInBytes,
                                                    UINT bindFlags,
                                                    const void* data);
@@ -111,37 +106,30 @@ public:
                                          const char* target);
 
 private:
-    RenderContextD3DImpl(ComPtr<ID3D11Device>,
-                         ComPtr<ID3D11DeviceContext>,
-                         const D3DCapabilities&);
+    RenderContextD3DImpl(ComPtr<ID3D11Device>, ComPtr<ID3D11DeviceContext>, const D3DCapabilities&);
 
-    rcp<RenderBuffer> makeRenderBuffer(RenderBufferType,
-                                       RenderBufferFlags,
-                                       size_t) override;
+    rcp<RenderBuffer> makeRenderBuffer(RenderBufferType, RenderBufferFlags, size_t) override;
 
     rcp<Texture> makeImageTexture(uint32_t width,
                                   uint32_t height,
                                   uint32_t mipLevelCount,
                                   const uint8_t imageDataRGBA[]) override;
 
-    std::unique_ptr<BufferRing> makeUniformBufferRing(
-        size_t capacityInBytes) override;
-    std::unique_ptr<BufferRing> makeStorageBufferRing(
-        size_t capacityInBytes,
-        gpu::StorageBufferStructure) override;
-    std::unique_ptr<BufferRing> makeVertexBufferRing(
-        size_t capacityInBytes) override;
+    std::unique_ptr<BufferRing> makeUniformBufferRing(size_t capacityInBytes) override;
+    std::unique_ptr<BufferRing> makeStorageBufferRing(size_t capacityInBytes,
+                                                      gpu::StorageBufferStructure) override;
+    std::unique_ptr<BufferRing> makeVertexBufferRing(size_t capacityInBytes) override;
+    std::unique_ptr<BufferRing> makeTextureTransferBufferRing(size_t capacityInBytes) override;
 
     void resizeGradientTexture(uint32_t width, uint32_t height) override;
     void resizeTessellationTexture(uint32_t width, uint32_t height) override;
-    void resizeAtlasTexture(uint32_t width, uint32_t height) override;
 
     void flush(const FlushDescriptor&) override;
 
     void setPipelineLayoutAndShaders(DrawType,
                                      gpu::ShaderFeatures,
                                      gpu::InterlockMode,
-                                     gpu::ShaderMiscFlags shaderMiscFlags);
+                                     gpu::ShaderMiscFlags pixelShaderMiscFlags);
 
     const D3DCapabilities m_d3dCapabilities;
 
@@ -152,19 +140,10 @@ private:
     ComPtr<ID3D11ShaderResourceView> m_gradTextureSRV;
     ComPtr<ID3D11RenderTargetView> m_gradTextureRTV;
 
-    // Gaussian integral table for feathering.
-    ComPtr<ID3D11Texture1D> m_featherTexture;
-    ComPtr<ID3D11ShaderResourceView> m_featherTextureSRV;
-
     ComPtr<ID3D11Texture2D> m_tessTexture;
     ComPtr<ID3D11ShaderResourceView> m_tessTextureSRV;
     ComPtr<ID3D11RenderTargetView> m_tessTextureRTV;
 
-    ComPtr<ID3D11Texture2D> m_atlasTexture;
-    ComPtr<ID3D11ShaderResourceView> m_atlasTextureSRV;
-    ComPtr<ID3D11RenderTargetView> m_atlasTextureRTV;
-
-    ComPtr<ID3D11RasterizerState> m_atlasRasterState;
     ComPtr<ID3D11RasterizerState> m_backCulledRasterState[2];
     ComPtr<ID3D11RasterizerState> m_doubleSidedRasterState[2];
 
@@ -176,11 +155,6 @@ private:
     ComPtr<ID3D11VertexShader> m_tessellateVertexShader;
     ComPtr<ID3D11PixelShader> m_tessellatePixelShader;
     ComPtr<ID3D11Buffer> m_tessSpanIndexBuffer;
-
-    ComPtr<ID3D11InputLayout> m_atlasLayout;
-    ComPtr<ID3D11VertexShader> m_atlasVertexShader;
-    ComPtr<ID3D11PixelShader> m_atlasFillPixelShader;
-    ComPtr<ID3D11PixelShader> m_atlasStrokePixelShader;
 
     struct DrawVertexShader
     {
@@ -194,8 +168,7 @@ private:
     ComPtr<ID3D11Buffer> m_patchVertexBuffer;
     ComPtr<ID3D11Buffer> m_patchIndexBuffer;
 
-    // Vertex/index buffers for drawing image rects.
-    // (gpu::InterlockMode::atomics only.)
+    // Vertex/index buffers for drawing image rects. (gpu::InterlockMode::atomics only.)
     ComPtr<ID3D11Buffer> m_imageRectVertexBuffer;
     ComPtr<ID3D11Buffer> m_imageRectIndexBuffer;
 
@@ -217,7 +190,5 @@ private:
     ComPtr<ID3D11SamplerState> m_mipmapSampler;
 
     ComPtr<ID3D11BlendState> m_srcOverBlendState;
-    ComPtr<ID3D11BlendState> m_plusBlendState;
-    ComPtr<ID3D11BlendState> m_maxBlendState;
 };
 } // namespace rive::gpu

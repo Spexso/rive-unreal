@@ -12,10 +12,7 @@ private:
     Artboard* m_artboard;
 
 public:
-    void viewModelInstance(ViewModelInstance* value)
-    {
-        m_viewModelInstance = value;
-    };
+    void viewModelInstance(ViewModelInstance* value) { m_viewModelInstance = value; };
     ViewModelInstance* viewModelInstance() { return m_viewModelInstance; }
     void artboard(Artboard* value) { m_artboard = value; };
     Artboard* artboard() { return m_artboard; }

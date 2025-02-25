@@ -12,8 +12,8 @@ protected:
 public:
     static const uint16_t typeKey = 74;
 
-    /// Helper to quickly determine if a core object extends another without
-    /// RTTI at runtime.
+    /// Helper to quickly determine if a core object extends another without RTTI
+    /// at runtime.
     bool isTypeOf(uint16_t typeKey) const override
     {
         switch (typeKey)
@@ -29,7 +29,7 @@ public:
 
     static const uint16_t animationIdPropertyKey = 165;
 
-protected:
+private:
     uint32_t m_AnimationId = -1;
 
 public:
@@ -44,10 +44,7 @@ public:
         animationIdChanged();
     }
 
-    void copy(const BlendAnimationBase& object)
-    {
-        m_AnimationId = object.m_AnimationId;
-    }
+    void copy(const BlendAnimationBase& object) { m_AnimationId = object.m_AnimationId; }
 
     bool deserialize(uint16_t propertyKey, BinaryReader& reader) override
     {

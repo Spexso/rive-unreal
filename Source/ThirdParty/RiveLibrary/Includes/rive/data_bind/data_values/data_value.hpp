@@ -8,12 +8,8 @@ namespace rive
 class DataValue
 {
 public:
-    virtual ~DataValue(){};
     virtual bool isTypeOf(DataType dataType) const { return false; }
-    template <typename T> inline bool is() const
-    {
-        return isTypeOf(T::typeKey);
-    }
+    template <typename T> inline bool is() const { return isTypeOf(T::typeKey); }
     template <typename T> inline T* as()
     {
         assert(is<T>());

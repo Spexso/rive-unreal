@@ -14,9 +14,7 @@ namespace rive
 class RiveRenderBuffer : public RenderBuffer
 {
 protected:
-    RiveRenderBuffer(RenderBufferType type,
-                     RenderBufferFlags flags,
-                     size_t sizeInBytes) :
+    RiveRenderBuffer(RenderBufferType type, RenderBufferFlags flags, size_t sizeInBytes) :
         RenderBuffer(type, flags, sizeInBytes)
     {}
 

@@ -12,9 +12,7 @@ namespace rive
 
 class NoOpFactory : public Factory
 {
-    rcp<RenderBuffer> makeRenderBuffer(RenderBufferType,
-                                       RenderBufferFlags,
-                                       size_t) override;
+    rcp<RenderBuffer> makeRenderBuffer(RenderBufferType, RenderBufferFlags, size_t) override;
 
     rcp<RenderShader> makeLinearGradient(float sx,
                                          float sy,

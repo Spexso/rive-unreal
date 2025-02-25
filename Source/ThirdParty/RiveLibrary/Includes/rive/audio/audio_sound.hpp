@@ -26,10 +26,8 @@ static ma_result ma_end_clipped_decoder_read(ma_data_source* pDataSource,
 {
     ma_end_clipped_decoder* clipped = (ma_end_clipped_decoder*)pDataSource;
 
-    ma_result result = ma_decoder_read_pcm_frames(&clipped->decoder,
-                                                  pFramesOut,
-                                                  frameCount,
-                                                  pFramesRead);
+    ma_result result =
+        ma_decoder_read_pcm_frames(&clipped->decoder, pFramesOut, frameCount, pFramesRead);
 
     clipped->frameCursor += *pFramesRead;
     if (clipped->frameCursor >= clipped->endFrame)
@@ -49,12 +47,10 @@ static ma_result ma_end_clipped_decoder_read(ma_data_source* pDataSource,
     return result;
 }
 
-static ma_result ma_end_clipped_decoder_seek(ma_data_source* pDataSource,
-                                             ma_uint64 frameIndex)
+static ma_result ma_end_clipped_decoder_seek(ma_data_source* pDataSource, ma_uint64 frameIndex)
 {
     ma_end_clipped_decoder* clipped = (ma_end_clipped_decoder*)pDataSource;
-    ma_result result =
-        ma_decoder_seek_to_pcm_frame(&clipped->decoder, frameIndex);
+    ma_result result = ma_decoder_seek_to_pcm_frame(&clipped->decoder, frameIndex);
     if (result != MA_SUCCESS)
     {
         return result;
@@ -64,13 +60,12 @@ static ma_result ma_end_clipped_decoder_seek(ma_data_source* pDataSource,
     return result;
 }
 
-static ma_result ma_end_clipped_decoder_get_data_format(
-    ma_data_source* pDataSource,
-    ma_format* pFormat,
-    ma_uint32* pChannels,
-    ma_uint32* pSampleRate,
-    ma_channel* pChannelMap,
-    size_t channelMapCap)
+static ma_result ma_end_clipped_decoder_get_data_format(ma_data_source* pDataSource,
+                                                        ma_format* pFormat,
+                                                        ma_uint32* pChannels,
+                                                        ma_uint32* pSampleRate,
+                                                        ma_channel* pChannelMap,
+                                                        size_t channelMapCap)
 {
     ma_end_clipped_decoder* clipped = (ma_end_clipped_decoder*)pDataSource;
     return ma_decoder_get_data_format(&clipped->decoder,
@@ -81,16 +76,14 @@ static ma_result ma_end_clipped_decoder_get_data_format(
                                       channelMapCap);
 }
 
-static ma_result ma_end_clipped_decoder_get_cursor(ma_data_source* pDataSource,
-                                                   ma_uint64* pCursor)
+static ma_result ma_end_clipped_decoder_get_cursor(ma_data_source* pDataSource, ma_uint64* pCursor)
 {
     ma_end_clipped_decoder* clipped = (ma_end_clipped_decoder*)pDataSource;
     *pCursor = clipped->frameCursor;
     return MA_SUCCESS;
 }
 
-static ma_result ma_end_clipped_decoder_get_length(ma_data_source* pDataSource,
-                                                   ma_uint64* pLength)
+static ma_result ma_end_clipped_decoder_get_length(ma_data_source* pDataSource, ma_uint64* pLength)
 {
     ma_end_clipped_decoder* clipped = (ma_end_clipped_decoder*)pDataSource;
     return ma_decoder_get_length_in_pcm_frames(&clipped->decoder, pLength);
@@ -116,9 +109,7 @@ public:
     bool completed() const;
 
 private:
-    AudioSound(AudioEngine* engine,
-               rcp<AudioSource> source,
-               Artboard* artboard);
+    AudioSound(AudioEngine* engine, rcp<AudioSource> source, Artboard* artboard);
     ma_end_clipped_decoder* clippedDecoder() { return &m_decoder; }
     ma_audio_buffer* buffer() { return &m_buffer; }
     ma_sound* sound() { return &m_sound; }

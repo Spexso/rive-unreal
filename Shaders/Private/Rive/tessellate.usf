@@ -1,10 +1,8 @@
 #include "/Engine/Public/Platform.ush"
+#define USE_GENERATED_UNIFORMS 1
 #define SPLIT_UINT4_ATTRIBUTES 1
 
-#ifdef UNIFORM_DEFINITIONS_AUTO_GENERATED
 #include "/Engine/Generated/GeneratedUniformBuffers.ush"
-#endif
-
 #include "parse_environment.ush"
 #include "Generated/rhi.minified.ush"
 #include "Generated/constants.minified.ush"

@@ -8,14 +8,12 @@ namespace rive
 class Factory;
 class RenderPath;
 class RawPath;
-class ShapePaintPath;
 
 class StrokeEffect
 {
 public:
     virtual ~StrokeEffect() {}
-    virtual void updateEffect(const ShapePaintPath* source) = 0;
-    virtual ShapePaintPath* effectPath() = 0;
+    virtual RenderPath* effectPath(const RawPath& source, Factory*) = 0;
     virtual void invalidateEffect() = 0;
 };
 } // namespace rive

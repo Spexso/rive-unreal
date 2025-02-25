@@ -5,14 +5,12 @@
 namespace rive
 {
 class Artboard;
-class TransitionPropertyArtboardComparator
-    : public TransitionPropertyArtboardComparatorBase
+class TransitionPropertyArtboardComparator : public TransitionPropertyArtboardComparatorBase
 {
 public:
     bool compare(TransitionComparator* comparand,
                  TransitionConditionOp operation,
-                 const StateMachineInstance* stateMachineInstance,
-                 StateMachineLayerInstance* layerInstance) override;
+                 const StateMachineInstance* stateMachineInstance) override;
 
 private:
     float propertyValue(const StateMachineInstance* stateMachineInstance);

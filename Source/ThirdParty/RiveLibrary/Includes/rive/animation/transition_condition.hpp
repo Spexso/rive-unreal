@@ -16,21 +16,10 @@ public:
 
     StatusCode import(ImportStack& importStack) override;
 
-    virtual bool evaluate(const StateMachineInstance* stateMachineInstance,
-                          StateMachineLayerInstance* layerInstance) const
-    {
-        return true;
-    }
-
-    virtual void useInLayer(const StateMachineInstance* stateMachineInstance,
-                            StateMachineLayerInstance* layerInstance) const
-    {}
+    virtual bool evaluate(const StateMachineInstance* stateMachineInstance) const { return true; }
 
 protected:
-    virtual bool validateInputType(const StateMachineInput* input) const
-    {
-        return true;
-    }
+    virtual bool validateInputType(const StateMachineInput* input) const { return true; }
 };
 } // namespace rive
 

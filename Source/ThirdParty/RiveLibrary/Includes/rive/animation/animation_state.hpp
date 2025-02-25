@@ -22,8 +22,7 @@ public:
     void animation(LinearAnimation* animation);
 #endif
 
-    std::unique_ptr<StateInstance> makeInstance(
-        ArtboardInstance*) const override;
+    std::unique_ptr<StateInstance> makeInstance(ArtboardInstance*) const override;
 };
 } // namespace rive
 

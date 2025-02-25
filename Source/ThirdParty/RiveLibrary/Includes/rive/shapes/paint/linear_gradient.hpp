@@ -10,14 +10,12 @@ namespace rive
 {
 class Node;
 class GradientStop;
-class PointDeformer;
 
 class LinearGradient : public LinearGradientBase, public ShapePaintMutator
 {
 private:
     std::vector<GradientStop*> m_Stops;
     Node* m_ShapePaintContainer = nullptr;
-    PointDeformer* m_deformer = nullptr;
 
 public:
     StatusCode onAddedDirty(CoreContext* context) override;
@@ -25,8 +23,7 @@ public:
     void update(ComponentDirt value) override;
     void markGradientDirty();
     void markStopsDirty();
-    void applyTo(RenderPaint* renderPaint,
-                 float opacityModifier) const override;
+    void applyTo(RenderPaint* renderPaint, float opacityModifier) const override;
 
 protected:
     void buildDependencies() override;
@@ -44,10 +41,6 @@ protected:
                               const ColorInt[],
                               const float[],
                               size_t count) const;
-
-private:
-    // Set m_deformer from the shape paint container
-    void updateDeformer();
 };
 } // namespace rive
 

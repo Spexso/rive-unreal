@@ -7,7 +7,6 @@ namespace rive
 class BindablePropertyTrigger : public BindablePropertyTriggerBase
 {
 public:
-    constexpr static uint32_t defaultValue = 0;
 };
 } // namespace rive
 

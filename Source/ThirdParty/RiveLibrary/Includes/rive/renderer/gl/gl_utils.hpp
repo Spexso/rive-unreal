@@ -11,10 +11,7 @@
 
 namespace glutils
 {
-void CompileAndAttachShader(GLuint program,
-                            GLenum type,
-                            const char* source,
-                            const GLCapabilities&);
+void CompileAndAttachShader(GLuint program, GLenum type, const char* source, const GLCapabilities&);
 
 void CompileAndAttachShader(GLuint program,
                             GLenum type,
@@ -24,9 +21,7 @@ void CompileAndAttachShader(GLuint program,
                             size_t numSources,
                             const GLCapabilities&);
 
-[[nodiscard]] GLuint CompileShader(GLuint type,
-                                   const char* source,
-                                   const GLCapabilities&);
+[[nodiscard]] GLuint CompileShader(GLuint type, const char* source, const GLCapabilities&);
 
 [[nodiscard]] GLuint CompileShader(GLuint type,
                                    const char* defines[],
@@ -35,7 +30,7 @@ void CompileAndAttachShader(GLuint program,
                                    size_t numSources,
                                    const GLCapabilities&);
 
-[[nodiscard]] GLuint CompileRawGLSL(GLenum shaderType, const char* rawGLSL);
+[[nodiscard]] GLuint CompileRawGLSL(GLuint shaderType, const char* rawGLSL);
 
 void LinkProgram(GLuint program);
 
@@ -151,41 +146,6 @@ public:
     ~VAO() { glDeleteVertexArrays(1, &m_id); }
 };
 
-class Shader : public GLObject
-{
-public:
-    Shader() = default;
-    Shader(Shader&& rhs) : GLObject(std::move(rhs)) {}
-    Shader& operator=(Shader&& rhs)
-    {
-        reset(std::exchange(rhs.m_id, 0));
-        return *this;
-    }
-    ~Shader() { reset(0); }
-
-    void compile(GLenum type,
-                 const char* source,
-                 const GLCapabilities& capabilities)
-    {
-        compile(type, nullptr, 0, &source, 1, capabilities);
-    }
-    void compile(GLenum type,
-                 const char* defines[],
-                 size_t numDefines,
-                 const char* sources[],
-                 size_t numSources,
-                 const GLCapabilities&);
-
-    void reset(GLuint adoptedID = 0)
-    {
-        if (m_id != 0)
-        {
-            glDeleteShader(m_id);
-        }
-        m_id = adoptedID;
-    }
-};
-
 class Program : public GLObject
 {
 public:
@@ -193,15 +153,13 @@ public:
     Program& operator=(Program&& rhs)
     {
         reset(std::exchange(rhs.m_id, 0));
-        m_vertexShader = std::move(rhs.m_vertexShader);
-        m_fragmentShader = std::move(rhs.m_fragmentShader);
+        m_vertexShaderID = std::exchange(rhs.m_vertexShaderID, 0);
+        m_fragmentShaderID = std::exchange(rhs.m_fragmentShaderID, 0);
         return *this;
     }
     ~Program() { reset(0); }
 
-    void compileAndAttachShader(GLenum type,
-                                const char* source,
-                                const GLCapabilities& capabilities)
+    void compileAndAttachShader(GLenum type, const char* source, const GLCapabilities& capabilities)
     {
         compileAndAttachShader(type, nullptr, 0, &source, 1, capabilities);
     }
@@ -221,8 +179,8 @@ private:
 
     void reset(GLuint adoptedProgramID);
 
-    glutils::Shader m_vertexShader;
-    glutils::Shader m_fragmentShader;
+    GLuint m_vertexShaderID = 0;
+    GLuint m_fragmentShaderID = 0;
 };
 
 void SetTexture2DSamplingParams(GLenum minFilter, GLenum magFilter);
@@ -230,6 +188,4 @@ void SetTexture2DSamplingParams(GLenum minFilter, GLenum magFilter);
 void BlitFramebuffer(rive::IAABB bounds,
                      uint32_t renderTargetHeight,
                      GLbitfield mask = GL_COLOR_BUFFER_BIT);
-
-void Uniform1iByName(GLuint programID, const char* name, GLint value);
 } // namespace glutils

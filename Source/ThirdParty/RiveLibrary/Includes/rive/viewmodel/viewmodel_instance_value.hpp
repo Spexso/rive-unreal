@@ -26,7 +26,6 @@ public:
     void addDependent(DataBind* value);
     void removeDependent(DataBind* value);
     virtual void setRoot(ViewModelInstance* value);
-    virtual void advanced(){};
 };
 } // namespace rive
 

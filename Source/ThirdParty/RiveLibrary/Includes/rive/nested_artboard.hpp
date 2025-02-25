@@ -6,7 +6,6 @@
 #include "rive/viewmodel/viewmodel_instance_value.hpp"
 #include "rive/hit_info.hpp"
 #include "rive/span.hpp"
-#include "rive/advancing_component.hpp"
 #include <stdio.h>
 
 namespace rive
@@ -17,10 +16,10 @@ class NestedAnimation;
 class NestedInput;
 class NestedStateMachine;
 class StateMachineInstance;
-class NestedArtboard : public NestedArtboardBase, public AdvancingComponent
+class NestedArtboard : public NestedArtboardBase
 {
 protected:
-    Artboard* m_Artboard = nullptr; // might point to m_Instance, and might not
+    Artboard* m_Artboard = nullptr;               // might point to m_Instance, and might not
     std::unique_ptr<ArtboardInstance> m_Instance; // may be null
     std::vector<NestedAnimation*> m_NestedAnimations;
 
@@ -40,6 +39,7 @@ public:
 
     StatusCode import(ImportStack& importStack) override;
     Core* clone() const override;
+    bool advance(float elapsedSeconds);
     void update(ComponentDirt value) override;
 
     bool hasNestedStateMachines() const;
@@ -53,9 +53,7 @@ public:
                         LayoutMeasureMode widthMode,
                         float height,
                         LayoutMeasureMode heightMode) override;
-    void controlSize(Vec2D size,
-                     LayoutScaleType widthScaleType,
-                     LayoutScaleType heightScaleType) override;
+    void controlSize(Vec2D size) override;
 
     /// Convert a world space (relative to the artboard that this
     /// NestedArtboard is a child of) to the local space of the Artboard
@@ -66,14 +64,9 @@ public:
     void decodeDataBindPathIds(Span<const uint8_t> value) override;
     void copyDataBindPathIds(const NestedArtboardBase& object) override;
     std::vector<uint32_t> dataBindPathIds() { return m_DataBindPathIdsBuffer; };
-    void setDataContextFromInstance(ViewModelInstance* viewModelInstance,
-                                    DataContext* parent);
-    void internalDataContext(DataContext* dataContext);
+    void dataContextFromInstance(ViewModelInstance* viewModelInstance, DataContext* parent);
+    void internalDataContext(DataContext* dataContext, DataContext* parent);
     void clearDataContext();
-
-    bool advanceComponent(float elapsedSeconds,
-                          AdvanceFlags flags = AdvanceFlags::Animate |
-                                               AdvanceFlags::NewFrame) override;
 };
 } // namespace rive
 
