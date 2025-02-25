@@ -6,24 +6,32 @@
 #include <stdio.h>
 namespace rive
 {
-class TransitionPropertyViewModelComparator : public TransitionPropertyViewModelComparatorBase
+class TransitionPropertyViewModelComparator
+    : public TransitionPropertyViewModelComparatorBase
 {
 public:
     StatusCode import(ImportStack& importStack) override;
     bool compare(TransitionComparator* comparand,
                  TransitionConditionOp operation,
-                 const StateMachineInstance* stateMachineInstance) override;
+                 const StateMachineInstance* stateMachineInstance,
+                 StateMachineLayerInstance* layerInstance) override;
     template <typename T = BindableProperty, typename U>
     U value(const StateMachineInstance* stateMachineInstance)
     {
-        if (m_bindableProperty->is<T>())
+        if (m_bindableProperty != nullptr && m_bindableProperty->is<T>())
         {
             auto bindableInstance =
-                stateMachineInstance->bindablePropertyInstance(m_bindableProperty);
-            return bindableInstance->as<T>()->propertyValue();
+                stateMachineInstance->bindablePropertyInstance(
+                    m_bindableProperty);
+            if (bindableInstance != nullptr)
+            {
+                return bindableInstance->as<T>()->propertyValue();
+            }
         }
-        return (new T())->propertyValue();
+        return T::defaultValue;
     };
+    void useInLayer(const StateMachineInstance* stateMachineInstance,
+                    StateMachineLayerInstance* layerInstance) const override;
 
 protected:
     BindableProperty* m_bindableProperty;

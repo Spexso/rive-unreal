@@ -59,3 +59,7 @@ Binaries/*
 !/.gitignore
 
 .DS_Store
+
+# Rive files
+.a
+.lib
